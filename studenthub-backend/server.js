@@ -1,3 +1,4 @@
+
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -18,18 +19,29 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      process.env.FRONTEND_URL
+    ].filter(Boolean),
+    credentials: true
   })
 );
 
 app.use(express.json());
 
-connectDB();
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "StudentHub backend is running.",
+    message: "StudentHub backend is running."
   });
 });
 
@@ -46,14 +58,16 @@ app.use((err, req, res, next) => {
 
   res.status(err.status || 500).json({
     success: false,
-    message: err.message || "Server error.",
+    message: err.message || "Server error."
   });
 });
 
-const PORT = process.env.PORT || 5000;
+if (process.env.VERCEL !== "1") {
+  const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(
-    `StudentHub backend running on http://localhost:${PORT}`
-  );
-});
+  app.listen(PORT, () => {
+    console.log(`StudentHub backend running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
