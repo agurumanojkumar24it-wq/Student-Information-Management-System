@@ -1,0 +1,176 @@
+export const studentsData = [
+  {
+    id: "STU001",
+    name: "Rahul Kumar",
+    email: "rahul@gmail.com",
+    phone: "9876543210",
+    department: "Information Technology",
+    course: "B.Tech IT",
+    year: "3rd Year",
+    section: "A",
+    attendance: 86,
+  },
+  {
+    id: "STU002",
+    name: "Priya Sharma",
+    email: "priya@gmail.com",
+    phone: "9876543211",
+    department: "Computer Science",
+    course: "B.Tech CSE",
+    year: "2nd Year",
+    section: "B",
+    attendance: 92,
+  },
+  {
+    id: "STU003",
+    name: "Arjun Reddy",
+    email: "arjun@gmail.com",
+    phone: "9876543212",
+    department: "Information Technology",
+    course: "B.Tech IT",
+    year: "4th Year",
+    section: "A",
+    attendance: 71,
+  },
+  {
+    id: "STU004",
+    name: "Sneha Rao",
+    email: "sneha@gmail.com",
+    phone: "9876543213",
+    department: "Electronics",
+    course: "B.Tech ECE",
+    year: "3rd Year",
+    section: "A",
+    attendance: 88,
+  },
+  {
+    id: "STU005",
+    name: "Kiran Kumar",
+    email: "kiran@gmail.com",
+    phone: "9876543214",
+    department: "Mechanical",
+    course: "B.Tech ME",
+    year: "2nd Year",
+    section: "B",
+    attendance: 76,
+  },
+];
+
+export const facultyData = [
+  {
+    id: "FAC001",
+    name: "Dr. Ravi Kumar",
+    email: "ravi@college.edu",
+    department: "Information Technology",
+    designation: "Professor",
+    subject: "Database Management",
+  },
+  {
+    id: "FAC002",
+    name: "Dr. Anitha Rao",
+    email: "anitha@college.edu",
+    department: "Computer Science",
+    designation: "Associate Professor",
+    subject: "Data Structures",
+  },
+  {
+    id: "FAC003",
+    name: "Mr. Suresh Babu",
+    email: "suresh@college.edu",
+    department: "Electronics",
+    designation: "Assistant Professor",
+    subject: "Digital Electronics",
+  },
+  {
+    id: "FAC004",
+    name: "Ms. Lakshmi Devi",
+    email: "lakshmi@college.edu",
+    department: "Mechanical",
+    designation: "Assistant Professor",
+    subject: "Engineering Mechanics",
+  },
+];
+
+export const coursesData = [
+  {
+    id: "CRS001",
+    name: "B.Tech Information Technology",
+    code: "IT",
+    department: "Information Technology",
+    duration: "4 Years",
+  },
+  {
+    id: "CRS002",
+    name: "B.Tech Computer Science",
+    code: "CSE",
+    department: "Computer Science",
+    duration: "4 Years",
+  },
+  {
+    id: "CRS003",
+    name: "B.Tech Electronics",
+    code: "ECE",
+    department: "Electronics",
+    duration: "4 Years",
+  },
+  {
+    id: "CRS004",
+    name: "B.Tech Mechanical",
+    code: "ME",
+    department: "Mechanical",
+    duration: "4 Years",
+  },
+];
+
+export const subjectsData = [
+  {
+    id: "SUB001",
+    name: "Database Management Systems",
+    code: "DBMS",
+    course: "B.Tech IT",
+    semester: "5",
+    faculty: "Dr. Ravi Kumar",
+  },
+  {
+    id: "SUB002",
+    name: "Data Structures",
+    code: "DS",
+    course: "B.Tech CSE",
+    semester: "3",
+    faculty: "Dr. Anitha Rao",
+  },
+  {
+    id: "SUB003",
+    name: "Computer Networks",
+    code: "CN",
+    course: "B.Tech IT",
+    semester: "5",
+    faculty: "Dr. Ravi Kumar",
+  },
+  {
+    id: "SUB004",
+    name: "Digital Electronics",
+    code: "DE",
+    course: "B.Tech ECE",
+    semester: "5",
+    faculty: "Mr. Suresh Babu",
+  },
+];
+
+export const marksData = [
+  {
+    studentId: "STU001",
+    subject: "DBMS",
+    marks: 86,
+  },
+  {
+    studentId: "STU002",
+    subject: "DS",
+    marks: 91,
+  },
+  {
+    studentId: "STU003",
+    subject: "DBMS",
+    marks: 68,
+  },
+];

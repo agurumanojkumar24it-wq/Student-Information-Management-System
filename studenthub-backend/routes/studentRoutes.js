@@ -1,0 +1,13 @@
+import express from "express";
+import Student from "../models/Student.js";
+import {protect} from "../middleware/authMiddleware.js";
+import {asyncHandler} from "../utils/asyncHandler.js";
+import {generateId} from "../utils/generateId.js";
+const router=express.Router();
+const selector=id=>({$or:[{studentId:id},...(id.match(/^[0-9a-fA-F]{24}$/)?[{_id:id}]:[])]});
+router.get("/",protect,asyncHandler(async(req,res)=>res.json({success:true,data:await Student.find().sort({createdAt:-1})})));
+router.get("/:id",protect,asyncHandler(async(req,res)=>{const student=await Student.findOne(selector(req.params.id));if(!student)return res.status(404).json({success:false,message:"Student not found."});res.json({success:true,data:student});}));
+router.post("/",protect,asyncHandler(async(req,res)=>{const{studentId,name,email,phone,department,course,year,section,attendance}=req.body;if(!name||!email||!department||!course||!year)return res.status(400).json({success:false,message:"Name, email, department, course and year are required."});const id=studentId?.trim()||generateId("STU");if(await Student.findOne({studentId:id}))return res.status(409).json({success:false,message:"Student ID already exists."});const student=await Student.create({studentId:id,name,email,phone,department,course,year,section,attendance:Number(attendance||0)});res.status(201).json({success:true,message:"Student created successfully.",data:student});}));
+router.put("/:id",protect,asyncHandler(async(req,res)=>{const body={...req.body};if(body.attendance!==undefined)body.attendance=Number(body.attendance);const student=await Student.findOneAndUpdate(selector(req.params.id),body,{new:true,runValidators:true});if(!student)return res.status(404).json({success:false,message:"Student not found."});res.json({success:true,message:"Student updated successfully.",data:student});}));
+router.delete("/:id",protect,asyncHandler(async(req,res)=>{const student=await Student.findOneAndDelete(selector(req.params.id));if(!student)return res.status(404).json({success:false,message:"Student not found."});res.json({success:true,message:"Student deleted successfully."});}));
+export default router;

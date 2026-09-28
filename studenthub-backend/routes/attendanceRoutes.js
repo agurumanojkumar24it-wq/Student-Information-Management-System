@@ -1,0 +1,12 @@
+import express from "express";
+import Attendance from "../models/Attendance.js";
+import {protect} from "../middleware/authMiddleware.js";
+import {asyncHandler} from "../utils/asyncHandler.js";
+import {generateId} from "../utils/generateId.js";
+const router=express.Router();
+const selector=id=>({$or:[{attendanceId:id},...(id.match(/^[0-9a-fA-F]{24}$/)?[{_id:id}]:[])]});
+router.get("/",protect,asyncHandler(async(req,res)=>res.json({success:true,data:await Attendance.find().sort({date:-1,createdAt:-1})})));
+router.post("/",protect,asyncHandler(async(req,res)=>{const{attendanceId,studentId,subjectId,date,status}=req.body;if(!studentId||!subjectId||!date)return res.status(400).json({success:false,message:"Student, subject and date are required."});if(!["Present","Absent"].includes(status))return res.status(400).json({success:false,message:"Attendance status must be Present or Absent."});if(await Attendance.findOne({studentId,subjectId,date}))return res.status(409).json({success:false,message:"Attendance for this student, subject and date already exists."});const record=await Attendance.create({attendanceId:attendanceId?.trim()||generateId("ATT"),studentId,subjectId,date,status});res.status(201).json({success:true,message:"Attendance created successfully.",data:record});}));
+router.put("/:id",protect,asyncHandler(async(req,res)=>{const existing=await Attendance.findOne(selector(req.params.id));if(!existing)return res.status(404).json({success:false,message:"Attendance record not found."});const studentId=req.body.studentId??existing.studentId,subjectId=req.body.subjectId??existing.subjectId,date=req.body.date??existing.date,status=req.body.status??existing.status;if(!["Present","Absent"].includes(status))return res.status(400).json({success:false,message:"Attendance status must be Present or Absent."});if(await Attendance.findOne({studentId,subjectId,date,_id:{$ne:existing._id}}))return res.status(409).json({success:false,message:"Another attendance record already exists for this student, subject and date."});Object.assign(existing,{studentId,subjectId,date,status});await existing.save();res.json({success:true,message:"Attendance updated successfully.",data:existing});}));
+router.delete("/:id",protect,asyncHandler(async(req,res)=>{const record=await Attendance.findOneAndDelete(selector(req.params.id));if(!record)return res.status(404).json({success:false,message:"Attendance record not found."});res.json({success:true,message:"Attendance deleted successfully."});}));
+export default router;

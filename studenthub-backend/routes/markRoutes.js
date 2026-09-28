@@ -1,0 +1,12 @@
+import express from "express";
+import Mark from "../models/Mark.js";
+import {protect} from "../middleware/authMiddleware.js";
+import {asyncHandler} from "../utils/asyncHandler.js";
+import {generateId} from "../utils/generateId.js";
+const router=express.Router();
+const selector=id=>({$or:[{markId:id},...(id.match(/^[0-9a-fA-F]{24}$/)?[{_id:id}]:[])]});
+router.get("/",protect,asyncHandler(async(req,res)=>res.json({success:true,data:await Mark.find().sort({createdAt:-1})})));
+router.post("/",protect,asyncHandler(async(req,res)=>{const{markId,studentId,subject,assessmentType,marks}=req.body;if(!studentId||!subject)return res.status(400).json({success:false,message:"Student and subject are required."});const value=Number(marks);if(Number.isNaN(value)||value<0||value>100)return res.status(400).json({success:false,message:"Marks must be between 0 and 100."});const record=await Mark.create({markId:markId?.trim()||generateId("MARK"),studentId,subject,assessmentType:assessmentType||"Internal",marks:value});res.status(201).json({success:true,message:"Marks created successfully.",data:record});}));
+router.put("/:id",protect,asyncHandler(async(req,res)=>{const value=req.body.marks!==undefined?Number(req.body.marks):undefined;if(value!==undefined&&(Number.isNaN(value)||value<0||value>100))return res.status(400).json({success:false,message:"Marks must be between 0 and 100."});const mark=await Mark.findOneAndUpdate(selector(req.params.id),{...req.body,...(value!==undefined?{marks:value}:{})},{new:true,runValidators:true});if(!mark)return res.status(404).json({success:false,message:"Mark record not found."});res.json({success:true,message:"Marks updated successfully.",data:mark});}));
+router.delete("/:id",protect,asyncHandler(async(req,res)=>{const mark=await Mark.findOneAndDelete(selector(req.params.id));if(!mark)return res.status(404).json({success:false,message:"Mark record not found."});res.json({success:true,message:"Marks deleted successfully."});}));
+export default router;

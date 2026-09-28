@@ -1,0 +1,12 @@
+import express from "express";
+import Subject from "../models/Subject.js";
+import {protect} from "../middleware/authMiddleware.js";
+import {asyncHandler} from "../utils/asyncHandler.js";
+import {generateId} from "../utils/generateId.js";
+const router=express.Router();
+const selector=id=>({$or:[{subjectId:id},...(id.match(/^[0-9a-fA-F]{24}$/)?[{_id:id}]:[])]});
+router.get("/",protect,asyncHandler(async(req,res)=>res.json({success:true,data:await Subject.find().sort({createdAt:-1})})));
+router.post("/",protect,asyncHandler(async(req,res)=>{const{subjectId,name,code,course,semester,faculty}=req.body;if(!name||!code||!course||!semester)return res.status(400).json({success:false,message:"Name, code, course and semester are required."});const id=subjectId?.trim()||generateId("SUB");if(await Subject.findOne({subjectId:id}))return res.status(409).json({success:false,message:"Subject ID already exists."});const subject=await Subject.create({subjectId:id,name,code,course,semester,faculty});res.status(201).json({success:true,message:"Subject created successfully.",data:subject});}));
+router.put("/:id",protect,asyncHandler(async(req,res)=>{const subject=await Subject.findOneAndUpdate(selector(req.params.id),req.body,{new:true,runValidators:true});if(!subject)return res.status(404).json({success:false,message:"Subject not found."});res.json({success:true,message:"Subject updated successfully.",data:subject});}));
+router.delete("/:id",protect,asyncHandler(async(req,res)=>{const subject=await Subject.findOneAndDelete(selector(req.params.id));if(!subject)return res.status(404).json({success:false,message:"Subject not found."});res.json({success:true,message:"Subject deleted successfully."});}));
+export default router;

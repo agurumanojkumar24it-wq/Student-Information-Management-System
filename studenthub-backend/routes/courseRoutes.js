@@ -1,0 +1,12 @@
+import express from "express";
+import Course from "../models/Course.js";
+import {protect} from "../middleware/authMiddleware.js";
+import {asyncHandler} from "../utils/asyncHandler.js";
+import {generateId} from "../utils/generateId.js";
+const router=express.Router();
+const selector=id=>({$or:[{courseId:id},...(id.match(/^[0-9a-fA-F]{24}$/)?[{_id:id}]:[])]});
+router.get("/",protect,asyncHandler(async(req,res)=>res.json({success:true,data:await Course.find().sort({createdAt:-1})})));
+router.post("/",protect,asyncHandler(async(req,res)=>{const{courseId,name,code,department,duration}=req.body;if(!name||!code||!department||!duration)return res.status(400).json({success:false,message:"Name, code, department and duration are required."});const id=courseId?.trim()||generateId("CRS");if(await Course.findOne({courseId:id}))return res.status(409).json({success:false,message:"Course ID already exists."});const course=await Course.create({courseId:id,name,code,department,duration});res.status(201).json({success:true,message:"Course created successfully.",data:course});}));
+router.put("/:id",protect,asyncHandler(async(req,res)=>{const course=await Course.findOneAndUpdate(selector(req.params.id),req.body,{new:true,runValidators:true});if(!course)return res.status(404).json({success:false,message:"Course not found."});res.json({success:true,message:"Course updated successfully.",data:course});}));
+router.delete("/:id",protect,asyncHandler(async(req,res)=>{const course=await Course.findOneAndDelete(selector(req.params.id));if(!course)return res.status(404).json({success:false,message:"Course not found."});res.json({success:true,message:"Course deleted successfully."});}));
+export default router;
