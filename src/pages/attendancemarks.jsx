@@ -11,8 +11,8 @@ import {
   XCircle,
 } from "lucide-react";
 
-const ATTENDANCE_API_URL = "http://localhost:5000/api/attendance";
-const MARKS_API_URL = "http://localhost:5000/api/marks";
+const ATTENDANCE_API_URL = "https://student-information-management-syst-henna.vercel.app/api/attendance";
+const MARKS_API_URL = "https://student-information-management-syst-henna.vercel.app/api/marks";
 
 function getGrade(marks) {
   const value = Number(marks);

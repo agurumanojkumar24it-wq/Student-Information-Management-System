@@ -21,7 +21,7 @@ import {
 
 import StudentModal from "../components/studentmodal";
 
-const API_URL = "http://localhost:5000/api/students";
+const API_URL = "https://student-information-management-syst-henna.vercel.app/api/students";
 
 function getAuthHeaders() {
   return {

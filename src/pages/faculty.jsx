@@ -12,7 +12,7 @@ import {
   Users,
 } from "lucide-react";
 
-const API_URL = "http://localhost:5000/api/faculty";
+const API_URL = "https://student-information-management-syst-henna.vercel.app/api/faculty";
 
 function getAuthHeaders() {
   return {

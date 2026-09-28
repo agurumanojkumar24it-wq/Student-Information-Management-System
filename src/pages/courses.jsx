@@ -12,8 +12,8 @@ import {
   Layers,
 } from "lucide-react";
 
-const API_URL = "http://localhost:5000/api/courses";
-const SUBJECT_API_URL = "http://localhost:5000/api/subjects";
+const API_URL = "https://student-information-management-syst-henna.vercel.app/api/courses";
+const SUBJECT_API_URL = "https://student-information-management-syst-henna.vercel.app/api/subjects";
 
 const emptyCourse = {
   id: "",

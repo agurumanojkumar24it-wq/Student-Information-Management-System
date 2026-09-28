@@ -27,8 +27,8 @@ npm install
 npm run dev
 ```
 
-Backend: http://localhost:5000
-Health check: http://localhost:5000/api/health
+Backend: https://student-information-management-syst-henna.vercel.app
+Health check: https://student-information-management-syst-henna.vercel.app/api/health
 
 ## MongoDB Atlas
 
